@@ -1,4 +1,4 @@
-# Chromosome-analyze
+# Chromosome Analyzer
 ## Overview
 
 Chromosome-analyze is a set of tools to segment and trace the axes of pachytene chromosomes in three-dimensional images of meiotic nuclei acquired by fluorescence microscopy. It was designed for images of immunofluorescently stained germline tissue in C. elegans, but is applicable to images acquired using other imaging modalities (e.g., confocal microscopy) in other organisms, provided that the axes of individual chromosomes are resolvable in the raw images. 
