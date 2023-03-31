@@ -831,70 +831,40 @@ end
 
 %=====================================================================
 function out = resizeAlongDim(in, dim, weights, indices, out_class)
+ out = resizeAlongDim1(in, dim, weights, indices);
+%---------------------------------------------------------------------
+function out = resizeAlongDim1(in, dim, weights, indices)
 % Resize along a specified dimension
 %
 % in           - input array to be resized
 % dim          - dimension along which to resize
 % weights      - weight matrix; row k is weights for k-th output pixel
 % indices      - indices matrix; row k is indices for k-th output pixel
-% out_class    - desired data class of output
 
-if isPureNearestNeighborComputation(weights)
-    out = resizeAlongDimUsingNearestNeighbor(in, dim, indices);
+if matlab.images.internal.resize.isPureNearestNeighborComputation(weights)
+    out = matlab.images.internal.resize.resizeAlongDimUsingNearestNeighbor(in, ...
+        dim, indices);
     return
 end
 
-% Reshape in to be a three-dimensional array, where the dimension being
-% resized is the second one.  The size of this three-dimensional array
-% is the variable pseudo_size_in below.
-%
-% Then resize the three-dimensional array along the second dimension.
-%
-% Finally, reshape the output to be consistent with the original
-% input.
-
-out_length = size(weights, 1);
-
-size_in = size(in);
-size_in((end + 1) : dim) = 1;
-
-pseudo_size_in = [prod(size_in(1:dim-1)) size_in(dim) prod(size_in(dim+1:end))];
-in = reshape(in, pseudo_size_in);
-
-M = pseudo_size_in(1);
-P = pseudo_size_in(3);
-
-pseudo_size_out = [M out_length P];
-
-out = localZeros(pseudo_size_out, out_class);
-
-% There's no particular magic to this block size.  By permuting a block
-% containing many rows, permute can take advantage of the fact that some
-% elements are close together.  That argues for a larger block size.  On
-% the other hand, a smaller block size keeps memory usage down.
-%
-% Use permute here so that we are resizing along the columns.  For each
-% output pixel, we'll be forming a weighted average of multiple input
-% pixels, so it helps cache efficiency to be operating on columns so
-% that we're accessing pixels located together in memory.
-block_size = 15;
-for m = 1:block_size:M
-    for p = 1:block_size:P
-        mm = m:(min(m + block_size - 1, M));
-        pp = p:(min(p + block_size - 1, P));
-        block = in(mm, :, pp);
-        block = permute(block, [2 1 3]);
-        block = resizeColumns(block, weights, indices);
-        out(mm, :, pp) = ipermute(block, [2 1 3]);
-    end
+% If dim is 3, permute the input matrix so that the third dimension
+% becomes the first dimension.  This way, we can resize along the
+% third dimensions as though we were resizing along the first dimension.
+isThirdDimResize = 3 == dim;
+if isThirdDimResize
+    in = permute(in,[3 2 1]);
+    dim = 1;
 end
 
-size_out = size_in;
-size_out(dim) = out_length;
+% The 'out' datatype will be same as 'in' datatype
+out = matlab.images.internal.resize.imresizemex(in, weights', indices', dim);
 
-out = reshape(out, size_out);
+% Permute back so that the original dimensions are restored if we were
+% resizing along the third dimension.
+if isThirdDimResize
+    out = permute(out,[3 2 1]);
+end
 %---------------------------------------------------------------------
-
 %=====================================================================
 function tf = isPureNearestNeighborComputation(weights)
 % True if there is only one column of weights, and if the weights are
@@ -906,10 +876,11 @@ tf = one_weight_per_pixel && all(weights == 1);
 %---------------------------------------------------------------------
 
 %=====================================================================
-function out = resizeColumns(in, weights, indices)
+% Unimportant code
+% function out = resizeColumns(in, weights, indices)
 % Resize a set of columns using the specified weights and indices.
 
-out = resizeColumnsCore(double(in), weights', indices');
+%out = resizeColumnsCore(double(in), weights', indices');
 %---------------------------------------------------------------------
 
 %=====================================================================
