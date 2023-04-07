@@ -1,4 +1,4 @@
-function gonad = initializegonad(dd, NUM_CHAN, SEG_CHANNEL, OVERWRITE_FLAG)
+function gonad = initializeGonadOMX(dd, NUM_CHAN, SEG_CHANNEL, OVERWRITE_FLAG)
 
 %-------------------------------------------------------------------------------------
 %
@@ -78,6 +78,7 @@ gonad.MAX_BORDER_AREA = 100;
 gonad.MAX_NUKE_DIA    = 170;
 gonad.MIN_NUKE_DIA    = 80;
 
+gonad.ASPECT_RATIO    = 1;
 
 % segmentation settings
 

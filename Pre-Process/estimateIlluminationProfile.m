@@ -6,7 +6,7 @@ BACKGROUND = 5000;
 for ii = 1:length(dds)
     
     
-    im_ = imread([dds(ii).name filesep 'im2_PROJ16.tif']);
+    im_ = imread([dds(ii).name filesep 'im1_PROJ.tif']);
     
     im_(im_<BACKGROUND) = 0;
     

@@ -1,4 +1,4 @@
-function batchInitializeGonadDV(dds, NUM_CHAN, SEG_CHAN, OVERWRITE_FLAG)
+function batchInitializeGonadOMX(dds, NUM_CHAN, SEG_CHAN, OVERWRITE_FLAG)
 
 if ~exist('OVERWRITE_FLAG', 'var')
     OVERWRITE_FLAG = 0;
