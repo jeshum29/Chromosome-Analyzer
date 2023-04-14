@@ -103,6 +103,13 @@ gonad.im3_off     = '3';
 gonad.im1_gamma   = '.8';
 gonad.im2_gamma   = '.6';
 gonad.im3_gamma   = '.8';
+
+% focus-finding settings
+fATable = zeros(6,3);
+gonad.focusAxisTable    = fATable;
+gonad.focusChannels     = [0,   2];
+gonad.focusSmoothing    = [0,   1];
+gonad.focusThresh       = [0,  10];
         
 
 'CRITICAL ALERT: Overwriting gonad.mat'

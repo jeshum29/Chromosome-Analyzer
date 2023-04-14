@@ -100,10 +100,11 @@ for ii = 1:length(props)
     cc = max(1, min(cc)) : min(sz(2), max(cc));
     zz = max(1, min(zz)) : min(sz(3), max(zz));
     
+    try 
+        mkk = mkF(rr,cc,zz)==ii;
+    catch
+        
 
-    mkk = true;
-
-    
     
     include_flag = isNuke2(...
         props(ii).Area, dia, mkk,...

@@ -23,12 +23,12 @@ for ii = 1:length(dds)
 
     crop = 5;
     
-    try
-        N = makeNukeData(gonad, crop, OVERWRITE_FLAG);
-    catch
-        'WARNING: makeNukeData error'
-        dds(ii).name
-        N = 0;
+    %try
+    N = makeNukeData(gonad, crop, OVERWRITE_FLAG);
+    %catch
+     %   'WARNING: makeNukeData error'
+      %  dds(ii).name
+       % N = 0;
     end
     
     N_total = N + N_total

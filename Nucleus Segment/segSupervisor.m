@@ -90,12 +90,14 @@ catch
         handles.pp = regionprops(handles.mkF,'Area','BoundingBox','Centroid');
         handles.mkFC = makeColorMask3(double(handles.mkF));
     catch
+        handles.mkF = [];
         handles.pp = [];
+        handles.mkFC = [];
     end
     
 end
 
-% handles.im = load3([handles.gonad.writeDir filesep 'im' num2str(handles.gonad.SEG_CHANNEL) '.tif']);
+%handles.im = load3([handles.gonad.writeDir filesep 'im' num2str(handles.gonad.SEG_CHANNEL) '.tif']);
 
 handles.mkF_reseg = [];
 handles.pp_reseg = [];
@@ -181,7 +183,7 @@ set(ff, 'WindowKeyPressFcn', @presser);
 
 set(gca,'Position',[0,0,1,1]);
 
-screen_sz = getScreenSize;
+screen_sz = get(0,'ScreenSize');
 
 if size(handles.mkF,1) > 512
     if screen_sz(3)==2560
@@ -848,6 +850,13 @@ imshow(autogain(cat(3,...
     max(handles.bandpass > handles.gonad.HIGH_THRESH,[],3),...
     0*handles.bandpass(:,:,1))), []);
 
+handles.mkF = autogain(cat(3,...
+    max(handles.bandpass > handles.gonad.LOW_THRESH,[],3),...
+    max(handles.bandpass > handles.gonad.HIGH_THRESH,[],3),...
+    0*handles.bandpass(:,:,1)));
+
+handles.pp = regionprops(handles.mkF,'Area','BoundingBox','Centroid');
+handles.mkFC = makeColorMask3(double(handles.mkF));
 
 gonad = handles.gonad;
 save([handles.gonad.writeDir filesep 'gonad.mat'], 'gonad');
@@ -879,6 +888,14 @@ imshow(autogain(cat(3,...
     max(handles.bandpass > handles.gonad.LOW_THRESH,[],3),...
     max(handles.bandpass > handles.gonad.HIGH_THRESH,[],3),...
     0*handles.bandpass(:,:,1))), []);
+
+handles.mkF = autogain(cat(3,...
+    max(handles.bandpass > handles.gonad.LOW_THRESH,[],3),...
+    max(handles.bandpass > handles.gonad.HIGH_THRESH,[],3),...
+    0*handles.bandpass(:,:,1)));
+
+handles.pp = regionprops(handles.mkF,'Area','BoundingBox','Centroid');
+handles.mkFC = makeColorMask3(double(handles.mkF));
 
 guidata(hObject, handles);
 
